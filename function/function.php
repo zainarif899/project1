@@ -7,7 +7,7 @@ class database
         $servername = "localhost";
         $username = "root";
         $password = "";
-        $database = "project1";
+        $database = "university_project";
 
         $conn = new mysqli($servername, $username,$password,$database);
 
