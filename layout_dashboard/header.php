@@ -13,14 +13,14 @@
   <div class="d-flex" id="wrapper">
     <!-- Sidebar -->
     <div id="sidebar" class="bg-dark text-white p-3 vh-100">
-  <a href="admin.php" class="text-white text-decoration-none"><h4>Dashboard</h4></a>
+  <a href="../admin/admin.php" class="text-white text-decoration-none"><h4>Dashboard</h4></a>
   <ul class="nav flex-column mt-4">
     
     <li class="nav-item sidebar-dropdown">
       <a href="#" class="nav-link text-white">Course</a>
       <ul class="dropdown-items list-unstyled ps-3">
-        <li><a href="course.php" class="nav-link text-white small">Add Course</a></li>
-        <li><a href="show.php" class="nav-link text-white small">Show Course</a></li>
+        <li><a href="../course/course.php" class="nav-link text-white small">Add Course</a></li>
+        <li><a href="../course/show.php" class="nav-link text-white small">Show Course</a></li>
       </ul>
     </li>
 

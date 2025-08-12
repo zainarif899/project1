@@ -84,12 +84,73 @@ class showcourse extends database
                 echo "<td>" . htmlspecialchars($row['course_code']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['course_type']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['credit_hours']) . "</td>";
-                echo "<td><a href='edit_course.php?id=" . htmlspecialchars($row['course_id']) . "' class='btn btn-primary btn-sm'>Edit</a>--<a href='delete_course.php?id=" . htmlspecialchars($row['course_id']) . "' class='btn btn-danger btn-sm'>Delete</a></td>";
+                echo "<td><a href='edit.php?id=" . htmlspecialchars($row['course_id']) . "' class='btn btn-primary btn-sm'>Edit</a>--<a href='delete.php?id=" . htmlspecialchars($row['course_id']) . "' class='btn btn-danger btn-sm'>Delete</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
         } else {
             echo "No courses found.";
+        }
+    }
+}
+
+
+class edit_course extends database
+{
+    public function editCourse($course_id)
+    {
+        $conn = $this->conn;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_update'])) {
+            $course_name   = trim($_POST['course_name']);
+            $course_code   = trim($_POST['course_code']);
+            $course_type   = trim($_POST['course_type']);
+            $credit_hours  = (int) $_POST['credit_hours'];
+
+            if (empty($course_name) || empty($course_code) || empty($course_type) || $credit_hours <= 0) {
+                echo "<div class='alert alert-danger'>Please fill in all fields correctly.</div>";
+                return;
+            }
+
+            $query = "UPDATE course SET course_name=?, course_code=?, course_type=?, credit_hours=? WHERE course_id=?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("sssii", $course_name, $course_code, $course_type, $credit_hours, $course_id);
+            $stmt->execute();
+            $stmt->close();
+            header("Location: show.php");
+            // echo "<script>alert('Course updated successfully!');</script>";
+            exit();
+        }
+        $stmt = $conn->prepare("SELECT * FROM course WHERE course_id = ?");
+        $stmt->bind_param("i", $course_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        $stmt->close();
+
+        return $data;
+    }
+}
+
+class delete_course extends database
+{
+    public function deleteCourse($course_id)
+    {
+        $conn = $this->conn;
+
+        // Ab GET request bhi allow hai
+        if (!empty($course_id)) {
+            $query = "DELETE FROM course WHERE course_id=?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("i", $course_id);
+            $stmt->execute();
+            $stmt->close();
+
+            // Redirect after delete
+            header("Location: show.php");
+            exit();
+        } else {
+            echo "Invalid course ID.";
         }
     }
 }
